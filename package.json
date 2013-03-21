@@ -1,0 +1,20 @@
+{
+  "name": "vml-minification",
+  "version": "0.0.0",
+  "description": "boilerplate grunt config",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo 'someday'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ruzz311/vml-minification.git"
+  },
+  "author": "",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "gitHead": "08fe4d509e6cae5845f3056e75fdda4528ade80d",
+  "devDependencies": {
+    "grunt": "~0.4.1"
+  }
+}
