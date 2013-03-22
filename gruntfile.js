@@ -2,22 +2,24 @@ module.exports = function(grunt) {
 
 	output_dir = 'htdocs/',
 	source_dir = 'src/',
-	temp_dir   = source_dir + 'temp/';
+	temp_dir   = source_dir + 'temp';
 
-	//grunt.loadNpmTasks('grunt-contrib');
-	grunt.loadNpmTasks('grunt-image-embed');
-	grunt.loadNpmTasks('grunt-contrib-mincss');
+	// Load all of our NPM tasks...
+	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-contrib-stylus');
+	grunt.loadNpmTasks('grunt-contrib-coffee');
+	grunt.loadNpmTasks('grunt-contrib-jshint');
 
 	// Output dirs
 	js_dir      = output_dir + 'js',
 	css_dir     = output_dir + 'css',
 
-	// Source
+	// Source dirs
 	coffee_dir  = source_dir + 'js',
 	stylus_dir  = source_dir + 'css';
 
@@ -26,149 +28,156 @@ module.exports = function(grunt) {
 	output_css  = output_dir + 'css/main.css';
 
 	grunt.initConfig({
-		// Setup our package
 		pkg: grunt.file.readJSON('package.json'),
 		meta: {
-			name: '[your_project_name]',
+			name: 'Project Name',
 			banner: '/*! <%= meta.name %> - v<%= pkg.version %> - <%= template.today("m/d/yyyy") %> */'
 		},
 
-		// Compile Stylus to temp/main.css
+		// Stylus task, compile our stylus to src/temp/compiled-stylus.css
 		stylus: {
 			compile: {
-				files: {
-					'temp/main.css' : stylus_dir + '/main.styl'
-				}
+				src: stylus_dir + '/main.styl',
+				dest: temp_dir + '/compiled-stylus.css'
 			}
 		},
 
-		// Compile our CoffeeScript, we async load scripts from loader so we are compiling all
-		// Coffee into one file, main.js. Then compile loader.coffee
+		// This gets a bit trickey, we have to run two concat tasks, one
+		// is before Coffee is compiled, the other is after the compilation.
+		// devPre tasks concats all coffee files, devPost then concats Twitter
+		// Bootstrap JS with our newly compiled Coffee. It also does the same 
+		// with our CSS.
+		concat: {
+			devPre: {
+				src: [coffee_dir + '/main.coffee', coffee_dir + '/nav.coffee', coffee_dir + '/core.coffee'],
+				dest: temp_dir + '/concat-coffee.coffee'
+			},
+
+			devPost: {
+				files: [
+					{
+						src: [js_dir + '/bootstrap.js', temp_dir + '/compiled-coffee.js'],
+						dest: temp_dir + '/all.js'
+					},
+
+					{
+						src: [css_dir + '/bootstrap.css', temp_dir + '/compiled-stylus.css'],
+						dest: temp_dir + '/compiled-css.css'
+					}
+				]
+			},
+
+			// This task is specific to the Watch CSS task, we don't want it messing
+			// with our JS since there isn't anything to move out of the temp dir.
+			watchCss: {
+				src: [css_dir + '/bootstrap.css', temp_dir + '/compiled-stylus.css'],
+				dest: temp_dir + '/compiled-css.css'
+			}
+		},
+
+		// After our devPre task from above is run, it now compiles that single concated
+		// Coffee file.
 		coffee: {
 			compile: {
 				files: {
-					'htdocs/js/main.js' : [coffee_dir + '/main.coffee', coffee_dir + '/nav.coffee', coffee_dir + '/helpers.coffee', coffee_dir + '/core.coffee'],
-					'htdocs/js/loader.js' : [coffee_dir + '/loader.coffee']
+					'src/temp/compiled-coffee.js' : [temp_dir + '/concat-coffee.coffee'],
+					'htdocs/js/loader.js': [coffee_dir + '/loader.coffee']
 				}
 			}
 		},
 
-		// Concat Files, take all js and concat them into one new file, temp/compiled.js.
-		// Then same with our CSS
-		concat: {
-			js: {
-				src: [js_dir + '/bootstrap.js', js_dir + '/plugins.js', js_dir + '/main.js'],
-				dest: 'temp/compiled.js'
-			},
-
-			css: {
-				src: ['htdocs/css/bootstrap.css', temp_dir + '/main.css'],
-				dest: 'temp/compiled.css'
-			}
-		},
-
-		// Uglify Files, Uglify works pretty well, my next example will use Google Closure Compiler
-		// for this. Anyway dev is simple, taking our "compiled" files from above and now minifying 
-		// and mangling them (obfucating variable names to a, b, c, d... ). Dev task we only do our
-		// single file, our prod process is a bit more intensive.
+		// Minify and mangle all JS. Uglify seems to have better performance numbers
+		// for minifying and compressing JS that is relatively small. For large projects,
+		// Google Closure Compiler is probably a better option. There is a Grunt module
+		// to use Closure Compiler. We will outline this in tutorial numero 2. This can
+		// make debugging more difficult but honestly with CoffeeScript, it doesn't really
+		// matter since compiled v source is vastly different.
 		uglify: {
 			options: {
-				banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n',
+				// Pritn a banner on our Uglified JS.
+				banner: '/*! <%= pkg.name %> <%= grunt.template.today("mm-dd-yyyy") %> */\n',
 				compress: true,
 				mangle: true
 			},
+
 			dev: {
 				files: {
-					'temp/compiled-min.js': [temp_dir + '/compiled.js']
+					'src/temp/uglified.js': [temp_dir + '/all.js'],
+					'htdocs/js/loader.js': 'htdocs/js/loader.js'
+				}
+			}
+		},
+
+		// Everybody loves JSHint. Use it to find any glaring errors with your code. 
+		// Remember: chrome the bolts
+		jshint: {
+			options: {
+				curley: true,
+				eqeqeq: true,
+				browser: true,
+				globals: {
+					jQuery: true
 				}
 			},
-			prod: {
-				files: {
-					'htdocs/js/loader.js': [js_dir + '/js/loader.js'],
-					'htdocs/js/main.js': [js_dir + '/js/main.js'],
-					'temp/compiled-min.js': [temp_dir + '/compiled.js']
-				}
+			dev: {
+				beforeconcat: [temp_dir + '/*.js'],
+				afterconcat: [js_dir + '/*.js']
 			}
 		},
 
-		// Base64 Embed Background Images for optimization, yea its a big deal...
-		imageEmbed: {
-			dist: {
-				src: 'temp/compiled.css',
-				dest: 'temp/imageembed.css'
-			}
-		},
-
-		// Minify CSS, this will help reduce filesize. Its harder to troubleshoot or
-		// develop in browser so some don't like doing this until you are pushing 
-		// prod builds out. 
+		// Minify our CSS so it has the smallest footprint possible. This can make debugging
+		// a bit more difficult but again, with Stylus, it doesnt really matter given the
+		// differences between source and compiled css.
 		cssmin: {
 			compress: {
-				src: 'temp/imageembed.css',
-				dest: 'temp/build.css'
+				src: temp_dir + '/compiled-css.css',
+				dest: temp_dir + '/cssmin.css'
 			}
 		},
 
-		// Copy JS/CSS from temp dir out to /htdocs
+		// Copy all of our new files out of our src/temp directory to the output css
+		// and output js files.
 		copy: {
-			dev: {
-				files: [
-					{
-						src: 'temp/compiled.css',
-						dest: output_css
-					},
-					{
-						src: 'temp/compiled.js',
-						dest: output_js
-					}
-				]
+			css: {
+				src: temp_dir + '/cssmin.css',
+				dest: output_css
 			},
-
-			prod: {
-				files: [
-					{
-						src: 'temp/build.css',
-						dest: output_css
-					},
-					{
-						src: 'temp/compiled-min.js',
-						dest: output_js
-					}
-				]
+			js: {
+				src: temp_dir + '/uglified.js',
+				dest: output_js
 			}
 		},
 
-		// Setup our watch tasks - these are great, think CodeKit but better.. Grunt Watch.
-		// These watch the Coffee and Stylus dirs for any changes, if it detects any changes
-		// it will automatically re-run a handful of tasks to produce a build of that file.
-		// Its a beautiful thing. Coffee gets compiled > concat:js/css task > copy:dev task > clean
+		// Setup watch tasks for any modifßications made to any Coffee or Stylus files
+		// and then re-run the needed tasks.
 		watch: {
 			coffee: {
 				files: [coffee_dir + '/*.coffee'],
-				tasks: ['coffee', 'concat:js', 'copy:dev', 'clean'],
+				tasks: ['concat:devPre', 'coffee', 'concat:devPost', 'uglify:dev', 'copy:js', 'jshint', 'clean'],
 				options: {
 					interrupt: false
 				}
 			},
 			stylus: {
 				files: [stylus_dir + '/*.styl'],
-				tasks: ['stylus', 'concat:css', 'copy:dev', 'clean'],
+				tasks: ['stylus', 'concat:watchCss', 'cssmin', 'copy:css', 'clean'],
 				options: {
 					interrupt: false
 				}
 			}
 		},
 
-		// Clean our temp directory
+		// Empty out our src/temp directory to be prepared for the next time.
 		clean: {
-			kill: ['temp']
+			kill: ['src/temp']
 		}
 	});
 
 	grunt.registerTask('default', function() {
 		grunt.log.writeln('I told you not to use the default task.');
 	});
-	// Run in terminal: grunt dev    or    grunt prod
-	grunt.registerTask('dev', ['stylus', 'coffee', 'concat', 'uglify:dev', 'copy:dev', 'clean', 'watch']);
-	grunt.registerTask('prod', ['coffee', 'concat', 'uglify:prod', 'imageEmbed', 'cssmin', 'copy:prod', 'clean']);
+
+	// You must run this in your termial as:  grunt dev
+	// I just don't like the default task...
+	grunt.registerTask('dev', ['stylus', 'concat:devPre', 'coffee', 'concat:devPost', 'uglify:dev', 'cssmin', 'copy:js', 'copy:css', 'jshint', 'clean', 'watch']);
 };

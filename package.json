@@ -16,5 +16,14 @@
   "gitHead": "08fe4d509e6cae5845f3056e75fdda4528ade80d",
   "devDependencies": {
     "grunt": "~0.4.1"
+    "grunt-contrib-cssmin": "*",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-copy": "*",
+    "grunt-contrib-clean": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-stylus": "*",
+    "grunt-contrib-coffee": "*",
+    "grunt-contrib-jshint": "*"
   }
 }
