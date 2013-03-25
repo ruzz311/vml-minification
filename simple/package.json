@@ -1,0 +1,10 @@
+{
+  "name": "vml-minification",
+  "version": "0.0.0",
+  "description": "boilerplate grunt config",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-watch": "*"
+  }
+}
