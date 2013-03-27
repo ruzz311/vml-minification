@@ -1,12 +1,7 @@
 module.exports = function(grunt) {
 
-	output_dir = 'htdocs/',
-	source_dir = 'src/',
-	temp_dir   = source_dir + 'temp';
-
 	// Load all of our NPM tasks...
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
-	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-clean');
@@ -15,17 +10,6 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-coffee');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 
-	// Output dirs
-	js_dir      = output_dir + 'js',
-	css_dir     = output_dir + 'css',
-
-	// Source dirs
-	coffee_dir  = source_dir + 'js',
-	stylus_dir  = source_dir + 'css';
-
-	// Output files
-	output_js   = output_dir + 'js/main.js',
-	output_css  = output_dir + 'css/main.css';
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
@@ -37,54 +21,21 @@ module.exports = function(grunt) {
 		// Stylus task, compile our stylus to src/temp/compiled-stylus.css
 		stylus: {
 			compile: {
-				src: stylus_dir + '/main.styl',
-				dest: temp_dir + '/compiled-stylus.css'
+				src: 'src/stylus/*.styl',
+				dest: 'src/temp/compiled.css'
 			}
 		},
 
-		// This gets a bit trickey, we have to run two concat tasks, one
-		// is before Coffee is compiled, the other is after the compilation.
-		// devPre tasks concats all coffee files, devPost then concats Twitter
-		// Bootstrap JS with our newly compiled Coffee. It also does the same 
-		// with our CSS.
-		concat: {
-			devPre: {
-				src: [coffee_dir + '/main.coffee', coffee_dir + '/nav.coffee', coffee_dir + '/core.coffee'],
-				dest: temp_dir + '/concat-coffee.coffee'
-			},
 
-			devPost: {
-				files: [
-					{
-						src: [js_dir + '/bootstrap.js', temp_dir + '/compiled-coffee.js'],
-						dest: temp_dir + '/all.js'
-					},
-
-					{
-						src: [css_dir + '/bootstrap.css', temp_dir + '/compiled-stylus.css'],
-						dest: temp_dir + '/compiled-css.css'
-					}
-				]
-			},
-
-			// This task is specific to the Watch CSS task, we don't want it messing
-			// with our JS since there isn't anything to move out of the temp dir.
-			watchCss: {
-				src: [css_dir + '/bootstrap.css', temp_dir + '/compiled-stylus.css'],
-				dest: temp_dir + '/compiled-css.css'
-			}
-		},
-
-		// After our devPre task from above is run, it now compiles that single concated
-		// Coffee file.
+		// Compile all .coffee files in the src/coffee directory and place it into temp folder
 		coffee: {
 			compile: {
 				files: {
-					'src/temp/compiled-coffee.js' : [temp_dir + '/concat-coffee.coffee'],
-					'htdocs/js/loader.js': [coffee_dir + '/loader.coffee']
+					'src/temp/coffee.js' : ['*.coffee']
 				}
 			}
 		},
+
 
 		// Minify and mangle all JS. Uglify seems to have better performance numbers
 		// for minifying and compressing JS that is relatively small. For large projects,
@@ -94,7 +45,6 @@ module.exports = function(grunt) {
 		// matter since compiled v source is vastly different.
 		uglify: {
 			options: {
-				// Pritn a banner on our Uglified JS.
 				banner: '/*! <%= pkg.name %> <%= grunt.template.today("mm-dd-yyyy") %> */\n',
 				compress: true,
 				mangle: true
@@ -102,11 +52,22 @@ module.exports = function(grunt) {
 
 			dev: {
 				files: {
-					'src/temp/uglified.js': [temp_dir + '/all.js'],
-					'htdocs/js/loader.js': 'htdocs/js/loader.js'
+					'src/temp/minified.js': ['src/temp/coffee.js']
 				}
 			}
 		},
+
+
+		// Minify our CSS so it has the smallest footprint possible. This can make debugging
+		// a bit more difficult but again, with Stylus, it doesnt really matter given the
+		// differences between source and compiled css.
+		cssmin: {
+			compress: {
+				src: 'src/temp/compiled.css',
+				dest: 'src/temp/compiled-min.css'
+			}
+		},
+
 
 		// Everybody loves JSHint. Use it to find any glaring errors with your code. 
 		// Remember: chrome the bolts
@@ -119,53 +80,43 @@ module.exports = function(grunt) {
 					jQuery: true
 				}
 			},
-			dev: {
-				beforeconcat: [temp_dir + '/*.js'],
-				afterconcat: [js_dir + '/*.js']
-			}
+			all: ['gruntfile.js', 'src/temp/*.js']
 		},
 
-		// Minify our CSS so it has the smallest footprint possible. This can make debugging
-		// a bit more difficult but again, with Stylus, it doesnt really matter given the
-		// differences between source and compiled css.
-		cssmin: {
-			compress: {
-				src: temp_dir + '/compiled-css.css',
-				dest: temp_dir + '/cssmin.css'
-			}
-		},
 
 		// Copy all of our new files out of our src/temp directory to the output css
 		// and output js files.
 		copy: {
 			css: {
-				src: temp_dir + '/cssmin.css',
-				dest: output_css
+				src: 'src/temp/compiled-min.css',
+				dest: 'htdocs/assets/css/main.css'
 			},
 			js: {
-				src: temp_dir + '/uglified.js',
-				dest: output_js
+				src: 'src/temp/minified.js',
+				dest: 'htdocs/assets/js/main.js'
 			}
 		},
+
 
 		// Setup watch tasks for any modifßications made to any Coffee or Stylus files
 		// and then re-run the needed tasks.
 		watch: {
 			coffee: {
-				files: [coffee_dir + '/*.coffee'],
-				tasks: ['concat:devPre', 'coffee', 'concat:devPost', 'uglify:dev', 'copy:js', 'jshint', 'clean'],
+				files: ['src/coffee/*.coffee'],
+				tasks: ['coffee', 'uglify', 'jshint', 'copy:js', 'clean'],
 				options: {
 					interrupt: false
 				}
 			},
 			stylus: {
-				files: [stylus_dir + '/*.styl'],
-				tasks: ['stylus', 'concat:watchCss', 'cssmin', 'copy:css', 'clean'],
+				files: ['src/stylus/*.styl'],
+				tasks: ['stylus', 'cssmin', 'copy:css', 'clean'],
 				options: {
 					interrupt: false
 				}
 			}
 		},
+
 
 		// Empty out our src/temp directory to be prepared for the next time.
 		clean: {
@@ -173,11 +124,6 @@ module.exports = function(grunt) {
 		}
 	});
 
-	grunt.registerTask('default', function() {
-		grunt.log.writeln('I told you not to use the default task.');
-	});
 
-	// You must run this in your termial as:  grunt dev
-	// I just don't like the default task...
-	grunt.registerTask('dev', ['stylus', 'concat:devPre', 'coffee', 'concat:devPost', 'uglify:dev', 'cssmin', 'copy:js', 'copy:css', 'jshint', 'clean', 'watch']);
+	grunt.registerTask('default', ['stylus', 'coffee', 'uglify', 'cssmin', 'jshint', 'copy', 'clean', 'watch']);
 };
