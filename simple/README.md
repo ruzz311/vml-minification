@@ -1,8 +1,7 @@
-Starter document. Shows you how to
+The goal of the 'simple' project is to help you use Grunt for the first time and learn the following concepts:
 
-* Use grunt for the first tiem
-* Concatenate files
-* Introduction to the watch task
+* File concatenation
+* The Watch task
 
 ## How do I use this?
 Great question! Simply point your terminal to the base directory and run `npm install` to install the
@@ -10,7 +9,7 @@ dependencies for this project. NPM will install all required dependencies (Grunt
 After completion we are ready to start! Run `grunt` in the terminal and watch the magic.
 
 ## Grunt Task Breakdown
-The first task of this gruntfile is to simply concatenate our CSS and Javascript. On closer inspection of
+The first task of this gruntfile is to simply concatenate our CSS and JavaScript. On closer inspection of
 the gruntfile, you may notice the src attribute is set to *.css and *.js. This tells Grunt to look for ANY
 file with that file extension and include that in the concatenation.
 

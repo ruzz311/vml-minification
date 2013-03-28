@@ -1,11 +1,10 @@
-Intermediate Shows you how to
+The goal of the 'intermediate' project is to introduce more complex uses of grunt. In addition to the concepts discussed in the 'simple' project, you'll learn:
 
-* Concatenate
-* Minify
-* Use a banner
-* Tie tasks together
-* Use jshint
-* Copy files
+* File minification
+* The Banner
+* How to tie tasks together
+* JSHint
+* Copying Files
 * Delete temporary files
 
 ## How do I use this?

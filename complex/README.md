@@ -1,13 +1,7 @@
-Complex Shows you how to
+The goal of the 'complex' project is to introduce further uses of grunt. In addition to the concepts discussed in the 'simple' and 'intermediate' projects, you'll learn:
 
-* Compile Stylus
-* Compile Coffeescript
-* Minify
-* Use multiple tasks
-* Use jshint
-* Copy files
-* Delete temporary files
-* Watch for file changes
+* How to compile a preprocessed css language - Stylus
+* How to compile a preprocessed js language - CoffeeScript
 
 ## How do I use this?
 Great question! Simply point your terminal to the base directory and run `npm install` to install the
