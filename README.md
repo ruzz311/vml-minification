@@ -14,7 +14,7 @@ This point of view is one in many future documents from the Client Side CoE that
 
 
 ## How To Minify
-**In short - [grunt](http://gruntjs.com/) with a series of [gunt-contrib](https://github.com/gruntjs/grunt-contrib) modules is the preferred method of minifying client side assets at VML.**
+**In short - [grunt](http://gruntjs.com/) with a series of [grunt-contrib](https://github.com/gruntjs/grunt-contrib) modules is the preferred method of minifying client side assets at VML.**
 
 Instead of explaining each module in detail, we believe the best method of learning is through example. Three sample projects have been created to act as a set of tutorials for developers unfamiliar with grunt. Within each project you'll find a README with an explanation of purpose and install / compile instructions.
 
