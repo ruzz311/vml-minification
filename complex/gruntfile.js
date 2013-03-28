@@ -30,9 +30,8 @@ module.exports = function(grunt) {
 		// Compile all .coffee files in the src/coffee directory and place it into temp folder
 		coffee: {
 			compile: {
-				files: {
-					'src/temp/coffee.js' : ['*.coffee']
-				}
+				src  : 'src/coffeescript/*.coffee',
+				dest : 'src/temp/coffee.js'
 			}
 		},
 
@@ -66,21 +65,6 @@ module.exports = function(grunt) {
 				src: 'src/temp/compiled.css',
 				dest: 'src/temp/compiled-min.css'
 			}
-		},
-
-
-		// Everybody loves JSHint. Use it to find any glaring errors with your code. 
-		// Remember: chrome the bolts
-		jshint: {
-			options: {
-				curley: true,
-				eqeqeq: true,
-				browser: true,
-				globals: {
-					jQuery: true
-				}
-			},
-			all: ['gruntfile.js', 'src/temp/*.js']
 		},
 
 
@@ -125,5 +109,5 @@ module.exports = function(grunt) {
 	});
 
 
-	grunt.registerTask('default', ['stylus', 'coffee', 'uglify', 'cssmin', 'jshint', 'copy', 'clean', 'watch']);
+	grunt.registerTask('default', ['stylus', 'coffee', 'uglify', 'cssmin', 'copy', 'clean', 'watch']);
 };
