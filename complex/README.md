@@ -25,10 +25,7 @@ This task takes our newly compiled Coffeescript (temp/coffee.js) and compresses 
 The next step in the minification process is do the same with our CSS. Our newly compiled Stylus is compressed
 down to temp/compiled-min.css.
 
-The fifth task is running JSHint over our compiled Javascript just to help make sure there are no major issues
-with it before we move on.
-
-The sixth task is to copy our newly compiled and minifed assets out of our temp directory to our /htdocs
+The fifth task is to copy our newly compiled and minifed assets out of our temp directory to our /htdocs
 directory. After this task is completed, we run the clean/kill task which removes our temp directory so
 it will be clean for our next build.
 

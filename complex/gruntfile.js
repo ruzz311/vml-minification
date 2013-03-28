@@ -68,21 +68,6 @@ module.exports = function(grunt) {
 		},
 
 
-		// Everybody loves JSHint. Use it to find any glaring errors with your code. 
-		// Remember: chrome the bolts
-		jshint: {
-			options: {
-				curley: true,
-				eqeqeq: true,
-				browser: true,
-				globals: {
-					jQuery: true
-				}
-			},
-			all: ['src/temp/*.js']
-		},
-
-
 		// Copy all of our new files out of our src/temp directory to the output css
 		// and output js files.
 		copy: {
@@ -124,5 +109,5 @@ module.exports = function(grunt) {
 	});
 
 
-	grunt.registerTask('default', ['stylus', 'coffee', 'uglify', 'cssmin', 'jshint', 'copy', 'clean', 'watch']);
+	grunt.registerTask('default', ['stylus', 'coffee', 'uglify', 'cssmin', 'copy', 'clean', 'watch']);
 };
