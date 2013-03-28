@@ -40,3 +40,6 @@ Node is a very versatile framework and will play a role in the future at VML. Bo
 * Easy to contribute to
 * Flexible and extendible
 * Popular and interesting
+
+## Who uses Grunt?
+Adobe, Pinterest, Backbone Boilerplate, Walmart Labs, Opera Software, jQuery, jQuery Mobile, jQuery UI, Twitter / TweetDeck and Modernizr just to name a few.
