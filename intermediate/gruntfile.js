@@ -18,8 +18,10 @@ module.exports = function(grunt) {
 
         // Concat our two files from HTML5BP - plugins.js and main.js into temporary directory
         concat: {
-            src: ['htdocs/js/plugins.js', 'htdocs/js/main.js'],
-            dest: ['temp/concat.js']
+            app:{
+                src:['htdocs/js/plugins.js', 'htdocs/js/main.js'],
+                dest: 'temp/concat.js'
+            }
         },
 
 
@@ -31,9 +33,11 @@ module.exports = function(grunt) {
                 compress: true,
                 mangle: true
             },
-
-            files: {
-                'htdocs/js/main-min.js': 'temp/concat.js'
+            
+            app: {
+                files: {
+                    'htdocs/js/main-min.js': ['temp/concat.js']
+                }
             }
         },
 
@@ -47,7 +51,8 @@ module.exports = function(grunt) {
                 globals: {
                     jQuery: true
                 }
-            }
+            },
+            files: ["js/main.js", "js/plugins.js"]
         },
 
 
@@ -68,5 +73,5 @@ module.exports = function(grunt) {
     });
 
     // You must run this in your termial as:  grunt
-    grunt.registerTask('default', ['concat', 'uglify', 'cssmin', 'jshint', 'clean']);
+    grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'cssmin', 'clean:kill']);
 };
