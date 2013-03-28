@@ -13,11 +13,12 @@ This point of view is one in many future documents from the Client Side CoE that
 * Reduce ramp up time when moving developers between projects
 
 
+## How To Minify
+**In short - [grunt](http://gruntjs.com/) with a series of [gunt-contrib](https://github.com/gruntjs/grunt-contrib) modules is the preferred method of minifying client side assets at VML.**
 
-## Code Samples
-Three sample projects have been created to act as a set of tutorials for developers unfamiliar with grunt. Within each project you'll find a README.md with an explanation of purpose and install / compile instructions.
+Instead of explaining each module in detail, we believe the best method of learning is through example. Three sample projects have been created to act as a set of tutorials for developers unfamiliar with grunt. Within each project you'll find a README with an explanation of purpose and install / compile instructions.
 
-Example Code can be found at @rmadsen [Github Page](https://github.com/ruzz311/vml-minification).
+Please see @rmadsen's Github Project - <https://github.com/ruzz311/vml-minification>.
 
 ### Getting SetUp
 To run the example code, you'll first need to install both Node and Grunt.
@@ -30,6 +31,8 @@ Teaching command line utilities is beyond the scope of this article. If you're u
 #### Using Node for the first time
 A thorough explanation of Node is also beyond the scope of this article. If this is your first time using the framework, please review a very brief yet thorough explanation on package management within Node at <http://en.wikipedia.org/wiki/Npm_(software)> - it's at least thorough enough for the tasks covered in this article.
 
+
+
 ## Why did we choose Node and Grunt?
 Node is a very versatile framework and will play a role in the future at VML. Both Node and Grunt are:
 
@@ -40,6 +43,8 @@ Node is a very versatile framework and will play a role in the future at VML. Bo
 * Easy to contribute to
 * Flexible and extendible
 * Popular and interesting
+
+
 
 ## Who uses Grunt?
 Adobe, Pinterest, Backbone Boilerplate, Walmart Labs, Opera Software, jQuery, jQuery Mobile, jQuery UI, Twitter / TweetDeck and Modernizr just to name a few.
