@@ -18,7 +18,7 @@ module.exports = function(grunt) {
 
         // Concat our two files from HTML5BP - plugins.js and main.js into temporary directory
         concat: {
-            src: [outpur_dir + '/js/plugins.js', output_dir + '/js/main.js'],
+            src: ['htdocs/js/plugins.js', 'htdocs/js/main.js'],
             dest: ['temp/concat.js']
         },
 
