@@ -49,5 +49,5 @@ Node is a very versatile framework and will play a role in the future at VML. Bo
 ## Who uses Grunt?
 Adobe, Pinterest, Backbone Boilerplate, Walmart Labs, Opera Software, jQuery, jQuery Mobile, jQuery UI, Twitter / TweetDeck and Modernizr just to name a few.
 
-## To be remembered
-* After grunt has been run and your files have been minified and compresseed, you'll need to update the source to which those files are being called.
+## Notes
+* It's worth noting that references to files in the HTML documents are compiled asses. For example, in the simple project, the script asset should point to `assets/js/app.js`, NOT `assets/js/yourcode.js`
