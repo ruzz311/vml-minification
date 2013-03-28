@@ -1,15 +1,21 @@
-vml-minification
-================
+Minifying client side assets can take a variety of forms. The following document and attached examples provide the recommended method per the Client Side CoE.
 
-This a simple boilerplate to use grunt to minify your projects.  The included 
-project-src is the [boiled-down-plate](https://github.com/justinwehrman/boiled-down-plate).
+## Why should I use the recommended method?
+At VML, developers are free to chose how they approach their everyday jobs. Our company methodology allows innovative individuals to solve problem in unique ways. This same philosophy also leads to a very large diverse range of technologies across teams and projects.
+This point of view is one in many future documents from the Client Side CoE that will recommend a set of technologies to solve a common development problem. By using the suggested methods, you'll be able to take advantatage of the following:
 
-To get started, install [Node.js](http://nodejs.org)(it has a one click installer).
+    * Grow your knowledge of a framework through discussion with other developers at VML
+    * Receive help from other developers who are familiar with the given technology
+    * Work across teams more easily
+    * Reduce ramp up time when moving developers between projects
 
-After node is installed, open Terminal (or cmd in windows) and install grunt globally:  
-`npm install -g grunt-cli`
 
-Then install the plugins and dependancies outlined in ./package.json in Terminal: `npm install`
+## Why did we choose Node and Grunt?
+Node is a very versatile framework and will play a role in the future at VML. Both Node and Grunt are:
 
-This will install the following:
-Grunt 0.4.1, Grunt Contrib Modules: cssmin, concat, uglify, copy, clean, watch, stylus, coffee and jshint.
+    * Free to use
+    * Easy to install
+    * Well documented
+    * Open source
+    * Easy to contribute to
+    * Flexible and extendible
