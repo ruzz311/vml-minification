@@ -64,4 +64,4 @@ Adobe, Pinterest, Backbone Boilerplate, Walmart Labs, Opera Software, jQuery, jQ
 ## Notes
 The above is a living document. Some feedback from those who have gone through the tutorials will be listed here:
 
-* It's worth noting that references to files in the HTML documents are compiled asses. For example, in the simple project, the script asset should point to `assets/js/app.js`, NOT `assets/js/yourcode.js`
+* It's worth noting that references to files in the HTML documents are compiled assets. For example, in the simple project, the script asset should point to `assets/js/app.js`, NOT `assets/js/yourcode.js`
